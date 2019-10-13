@@ -4,5 +4,5 @@ Tools to correct GPS timestamp with original photo date or folder date (if origi
 
 Folder date should be "yyyy-MM-dd text"
 
-Rename photo as yyyy-MM-ddThh:mm:ss.JPG and upload to Google photos
+Then rename photo as yyyy-MM-ddThh:mm:ss.JPG and upload to Google photos
 
