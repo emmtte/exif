@@ -1,8 +1,12 @@
-## Google Photos Storage
+# 2 in 1 script
+## Google Photos Storage and date time correction for Global Positioning System
+###Features
+* Automatic correction the EXIF DateTimeGPS with DateTimeCreated if exist or directory name
+* Rename photo as unique name ````yyyy-MM-ddThh:mm:ss.JPG````
+* Create Google Photos Album Name in concordance of directory Name
+* Upload photo in apropriate Album Name 
+* Choose to correct photo and upload or only correct photo or only upload photo
+ 
+###Installation
 
-Tools to correct GPS timestamp with original photo date or folder date (if original date not exist).
-
-Folder date should be "yyyy-MM-dd text"
-
-Then rename photo as yyyy-MM-ddThh:mm:ss.JPG and upload to Google photos
 
