@@ -36,7 +36,6 @@ node gp
 ````
 
 #### Options
-* Correct EXIF and Upload : ````node gp correct_upload````
-* Correct EXIF Only : ````node gp correctd````
-* Upload Only :  ````node gp upload````
+* Correct EXIF and Upload : ````node gp upload````
+* Correct EXIF Only : ````node gp````
 
