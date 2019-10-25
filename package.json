@@ -12,16 +12,20 @@
     "sharp": "latest",
     "dropbox": "latest",
     "fs": "latest",
+    "glob": "latest",
     "googleapis": "latest",
     "googlephotos": "latest",
     "node-schedule": "latest",
-    "oath": "latest",
+    "path": "latest",
+    "prompts": "latest",
     "request-promise": "latest",
+    "sharp": "latest",
     "telegraf": "latest",
     "util": "latest"
   },
   "scripts": {
-    "bot": "node gp"
+    "gp": "node gp",
+    "gpu": "node gp upload"
   },
   "author": "emmett",
   "license": "MIT"
