@@ -6,17 +6,17 @@
   "main": "gp.js",
   "dependencies": {
     "date-fns": "latest",
-    "dealy": "latest"
+    "dealy": "latest",
     "exiftool-vendored": "latest",
     "image-size": "latest",
     "sharp": "latest",
     "dropbox": "latest",
     "fs": "latest",
-    "googleapis": "latest"
-    "googlephotos": "latest"
+    "googleapis": "latest",
+    "googlephotos": "latest",
     "node-schedule": "latest",
-    "oath": "latest"
-    "request-promise": "latest"
+    "oath": "latest",
+    "request-promise": "latest",
     "telegraf": "latest",
     "util": "latest"
   },
