@@ -5,7 +5,7 @@
 * Rename photo as unique name ````yyyy-MM-ddThh:mm:ss.JPG````
 * Create Google Photos Album Name in concordance of directory Name
 * Upload photo in apropriate Album Name 
-* Choose to correct photo and upload or only correct photo or only upload photo
+* Choose to correct photo and upload or only correct photo
  
 ### Installation
 #### Node.js
