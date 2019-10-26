@@ -19,12 +19,12 @@ rm node.tar.gz
 
 #### Client ID and Client secret
 * Open the Google API [Console Credentials page](https://console.developers.google.com/apis/credentials).
-* Click Select a project, then NEW PROJECT, and enter a name for the project, and optionally, edit the provided project ID. Click Create.
-* On the Credentials page, select Create credentials, then OAuth client ID.
-* You may be prompted to set a product name on the Consent screen; if so, click Configure consent screen, supply the requested information, and click Save to return to the Credentials screen.
-* Select Other for the Application type, and enter any additional information required.
-* Click Create.
-* On the page that appears, copy the client ID and client secret to your clipboard, as you will need them when you configure your client library.
+* Click __Select a project__, then __NEW PROJECT__, and enter a name for the project, and optionally, edit the provided project ID. Click __Create__.
+* On the Credentials page, select __Create credentials__, then __OAuth client ID__.
+* You may be prompted to set a product name on the Consent screen; if so, click __Configure consent screen__, supply the requested information, and click __Save__ to return to the Credentials screen.
+* Select __Other__ for __the Application type__, and enter any additional information required.
+* Click __Create__.
+* On the page that appears, copy the __client ID__ and __client secret__ to your clipboard, as you will need them when you configure your client library.
 
 ### Installation
 #### Script
