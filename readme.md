@@ -16,8 +16,8 @@ wget https://nodejs.org/dist/v$VERSION/node-v$VERSION-linux-armv7l.tar.gz -O nod
 sudo tar -xvf node.tar.gz --strip 1 -C /usr/local
 rm node.tar.gz
 ````
-
-#### Client ID and Client secret
+#### Google Photos OAuth2 Authentication
+__Create a client ID and client secret__
 * Open the [Google API Console Credentials page](https://console.developers.google.com/apis/credentials).
 * Click __Select a project__, then __NEW PROJECT__, and enter a name for the project, and optionally, edit the provided project ID. Click __Create__.
 * On the Credentials page, select __Create credentials__, then __OAuth client ID__.
