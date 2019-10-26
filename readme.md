@@ -1,13 +1,13 @@
 # 2 in 1 script
 ## Google Photos Storage and date time correction for Global Positioning System
-### Features
+## Features
 * Automatic correction for EXIF DateTimeGPS with DateTimeCreated if exist or directory name
 * Rename photo as unique name ````yyyy-MM-ddThh:mm:ss.JPG````
 * Create Google Photos Album Name in concordance of directory Name
 * Upload photo in apropriate Album Name 
 * Choose to correct photo and upload or only correct photo
  
-### Prerequisite
+## Prerequisite
 #### Download and Install Node.js
 Go to [nodejs.org](https://nodejs.org/en/download/current/) to download and install latest current version
 ````
@@ -39,7 +39,7 @@ Creating a new bot with [BotFather](https://telegram.me/botfather)
 * Copy the __chatid__ to the configuration file ````config.json````
 
 
-### Installation
+## Installation
 #### Script
 ````
 mkdir ~/gp
@@ -57,7 +57,7 @@ node gp
 
 
 
-### MIT License
+## MIT License
 
 Copyright © ````October 1, 2019```` ````Emmanuel CHARETTE````
 
