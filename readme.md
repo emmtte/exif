@@ -33,7 +33,10 @@ Creating a new bot with [BotFather](https://telegram.me/botfather)
 * The __name__ of your bot is displayed in contact details and elsewhere.
 * The __Username__ is a short name, to be used in mentions and telegram.me links. Usernames are 5-32 characters long and are case insensitive, but may only include Latin characters, numbers, and underscores. Your bot's username must end in ‘bot’.
 * Copy the __token__ to the configuration file ````config.json````
-
+* Send a dummy message whith your new bot
+* Go to following url: https://api.telegram.org/bot````<token>````/getUpdates
+* Look for ````“chat”:{“id”:-,````
+* Copy the __chatid__ to the configuration file ````config.json````
 
 
 ### Installation
