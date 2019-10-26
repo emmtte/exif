@@ -8,8 +8,7 @@
 * Choose to correct photo and upload or only correct photo
  
 ### Prerequisite
-#### Node.js
-https://nodejs.org/en/
+#### [Node.js](https://nodejs.org/en/)
 ````
 VERSION=13.0.1
 sudo apt-get -y install build-essential
@@ -19,7 +18,6 @@ rm node.tar.gz
 ````
 
 #### Client ID and Client secret
-https://console.developers.google.com/apis/credentials
 * Open the Google API [Console Credentials page](https://console.developers.google.com/apis/credentials).
 * Click Select a project, then NEW PROJECT, and enter a name for the project, and optionally, edit the provided project ID. Click Create.
 * On the Credentials page, select Create credentials, then OAuth client ID.
