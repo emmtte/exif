@@ -38,24 +38,17 @@ Creating a new bot with [BotFather](https://telegram.me/botfather)
 * Look for ````"chat":{"id":````
 * Copy the __chatid__ to the configuration file ````config.json````
 
-
 ## Installation
-#### Script
+#### Downloading and installing packages locally
 ````
-mkdir ~/gp
-cd ~/gp
+mkdir ~/gp && cd ~/gp
 wget https://raw.githubusercontent.com/ManuCart/Google-Photos-Storage/master/package.json
 npm install
-node gp
 ````
-
-
 #### Run
-* Correct EXIF : ````node gp````
-* Correct EXIF and Upload : ````node gp upload````
-
-
-
+Run one of this two command from the location of the packages install directory
+* To correct EXIF : ````node gp````
+* To correct EXIF and Upload : ````node gp upload````
 
 ## MIT License
 
