@@ -52,11 +52,10 @@ node gp
 
 
 
-### License
 
-MIT License
+### MIT License
 
-Copyright (c) October 1, 2019 Emmanuel CHARETTE
+Copyright © ````October 1, 2019```` ````Emmanuel CHARETTE````
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
