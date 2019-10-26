@@ -39,8 +39,8 @@ node gp
 ````
 
 #### Options
+* Correct EXIF : ````node gp````
 * Correct EXIF and Upload : ````node gp upload````
-* Correct EXIF Only : ````node gp````
 
 ### License
 
