@@ -7,8 +7,9 @@
 * Upload photo in apropriate Album Name 
 * Choose to correct photo and upload or only correct photo
  
-### Installation
+### Prerequisite
 #### Node.js
+https://nodejs.org/en/
 ````
 VERSION=13.0.1
 sudo apt-get -y install build-essential
@@ -17,7 +18,8 @@ sudo tar -xvf node.tar.gz --strip 1 -C /usr/local
 rm node.tar.gz
 ````
 
-#### Create a client ID and client secret
+#### Client ID and Client secret
+https://console.developers.google.com/apis/credentials
 * Open the Google API Console Credentials page.
 * Click Select a project, then NEW PROJECT, and enter a name for the project, and optionally, edit the provided project ID. Click Create.
 * On the Credentials page, select Create credentials, then OAuth client ID.
@@ -26,6 +28,7 @@ rm node.tar.gz
 * Click Create.
 * On the page that appears, copy the client ID and client secret to your clipboard, as you will need them when you configure your client library.
 
+### Installation
 #### Script
 ````
 mkdir ~/gp
