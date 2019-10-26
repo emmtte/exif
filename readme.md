@@ -24,7 +24,16 @@ Create a client ID and client secret
 * You may be prompted to set a product name on the Consent screen; if so, click __Configure consent screen__, supply the requested information, and click __Save__ to return to the Credentials screen.
 * Select __Other__ for __the Application type__, and enter any additional information required.
 * Click __Create__.
-* On the page that appears, copy the __client ID__ and __client secret__ to your clipboard, as you will need them when you configure your client library.
+* On the page that appears, copy the __client ID__ and __client secret__ to the configuration file ````config.json````
+
+#### Telegram Notification (Optional) 
+Creating a new bot with [BotFather](https://telegram.me/botfather)
+* Use the __/newbot__ command to create a new bot. The BotFather will ask you for a name and username, then generate an authorization token for your new bot.
+* The __name__ of your bot is displayed in contact details and elsewhere.
+* The __Username__ is a short name, to be used in mentions and telegram.me links. Usernames are 5-32 characters long and are case insensitive, but may only include Latin characters, numbers, and underscores. Your bot's username must end in ‘bot’.
+* Copy the __token__ to the configuration file ````config.json````
+
+
 
 ### Installation
 #### Script
@@ -36,9 +45,12 @@ npm install
 node gp
 ````
 
-#### Options
+
+#### Run
 * Correct EXIF : ````node gp````
 * Correct EXIF and Upload : ````node gp upload````
+
+
 
 ### License
 
