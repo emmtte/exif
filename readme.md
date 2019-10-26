@@ -8,7 +8,8 @@
 * Choose to correct photo and upload or only correct photo
  
 ### Prerequisite
-#### [Node.js](https://nodejs.org/en/)
+#### Download and Install Node.js
+Go to [nodejs.org](https://nodejs.org/en/download/current/) to download and install latest current version
 ````
 VERSION=13.0.1
 sudo apt-get -y install build-essential
