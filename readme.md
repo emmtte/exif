@@ -18,7 +18,7 @@ rm node.tar.gz
 ````
 
 #### Client ID and Client secret
-* Open the Google API [Console Credentials page](https://console.developers.google.com/apis/credentials).
+* Open the [Google API Console Credentials page](https://console.developers.google.com/apis/credentials).
 * Click __Select a project__, then __NEW PROJECT__, and enter a name for the project, and optionally, edit the provided project ID. Click __Create__.
 * On the Credentials page, select __Create credentials__, then __OAuth client ID__.
 * You may be prompted to set a product name on the Consent screen; if so, click __Configure consent screen__, supply the requested information, and click __Save__ to return to the Credentials screen.
