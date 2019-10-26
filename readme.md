@@ -40,7 +40,7 @@ Creating a new bot with [BotFather](https://telegram.me/botfather)
 ````
 mkdir ~/gp
 cd ~/gp
-wget https://github.com/ManuCart/Google-Photos-Storage/edit/master/package.json
+wget https://raw.githubusercontent.com/ManuCart/Google-Photos-Storage/master/package.json
 npm install
 node gp
 ````
