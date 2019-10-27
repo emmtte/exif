@@ -47,8 +47,8 @@ npm install
 ````
 #### Execution
 Run one of this two command from the location of the packages install directory
-* To correct Photos EXIF : ````node gp````
-* To correct Photos EXIF and Upload : ````node gp upload````
+* To correct EXIF Photos : ````node gp````
+* To correct EXIF Photos and Upload : ````node gp upload````
 
 ## MIT License
 
