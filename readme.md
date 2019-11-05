@@ -4,8 +4,8 @@ Fix automatically metadata photos and upload into Google Photos
 * Fix automatically EXIF DateTimeGPS with DateTimeOriginal if exists or else with directory name
 * Rename photo files with an unique name ````yyyy-MM-ddThh:mm:ss.JPG````
 * Create Google Photos Albums with the directory's name ````yyyy-MM-dd *````
-* Upload photos into the appropriate Album 
-* Choose either to correct photos and upload them or only to correct photos
+* Upload photos into the appropriate Album
+* Choose either to correct the photo's metadata and upload them or only to correct them
  
 ## Prerequisite
 #### Download and Install Node.js
