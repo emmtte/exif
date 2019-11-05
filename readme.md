@@ -1,8 +1,8 @@
 # Google Photos Metadata Fixer
 Fix automatically metadata photos and upload to Google Photos
 ## Features
-* Fix automatically EXIF DateTimeGPS with DateTimeCreated if exist or directory name
-* Rename photos as unique name ````yyyy-MM-ddThh:mm:ss.JPG````
+* Fix automatically EXIF DateTimeGPS with DateTimeCreated if exists or else with directory name
+* Rename photos file as unique name ````yyyy-MM-ddThh:mm:ss.JPG````
 * Create Google Photos Album Name in concordance of name directory ````yyyy-MM-dd *````
 * Upload photo in apropriate Album Name 
 * Choose to correct photo and upload or only correct photo
