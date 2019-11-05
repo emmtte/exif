@@ -1,5 +1,5 @@
-# 2 in 1 script
-## Google Photos Storage and date time correction for Global Positioning System
+# Google Photos Metadata Fixer
+Fix metadata photos and upload to Google Photos
 ## Features
 * Automatic correction for EXIF DateTimeGPS with DateTimeCreated if exist or directory name
 * Rename photo as unique name ````yyyy-MM-ddThh:mm:ss.JPG````
