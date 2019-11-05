@@ -5,8 +5,8 @@ Automatically fix photo's metadata and upload into Google Photos
 * Rename photo files with an unique name ````yyyy-MM-ddThh:mm:ss.JPG````
 * Create Google Photos Albums with the directory's name ````yyyy-MM-dd *````
 * Upload photos into the appropriate Album
-* Choose either to correct the photo's metadata and upload them or only to correct them
- 
+* Choose either to correct the photo's metadata and upload the photo or only to correct the metadata
+
 ## Prerequisite
 #### Download and Install Node.js
 Go to [nodejs.org](https://nodejs.org/en/download/current/) to download and install latest current version
