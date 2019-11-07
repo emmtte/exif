@@ -46,6 +46,7 @@ wget https://raw.githubusercontent.com/ManuCart/Google-Photos-Metadata-Fixer/mas
 npm install
 ````
 #### Execution
+Please be carreful : use this script with a backup for your photos
 Run one of this two command from the location of the packages install directory
 * To correct EXIF Photos : ````node gp````
 * To correct EXIF Photos and Upload : ````node gp upload````
