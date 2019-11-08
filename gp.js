@@ -74,23 +74,6 @@ main()
  
 async function bidon(){}
  
-async function ConfigSave() {
-let json = JSON.stringify(config, null, 1)
-await writeFile("config.json", json)
-}
- 
-oAuth2Client.on('tokens', (tokens) => {
-          console.log(`tokens.refresh_token(automatic receive) : ${tokens.refresh_token}`);
-              bot.telegram.sendMessage(chatid,"new token refresh");
-              //await writeFile("credentials.json", JSON.stringify(tokens, null, 1))
-              console.log("===============================================================")
-              console.log(tokens)
-              console.log("===============================================================")
-});
- 
- 
- 
- 
 async function token() {
  
 var now = Date.now()
@@ -157,60 +140,63 @@ async function CheckAccessToken() {
 }
  
  
-async function main () {
-         
-    if (Upload) {await auth()
-             await token()}
-    await folders()
-     
-         
+async function main() {
  
+if (Upload) {await auth()
+         await token()}
+ 
+//check directories
+var dirs=[]
+ 
+var globdirs = await glob(`${config.PhotosFolder}/[1839-2300]/????-??-??*`)
+for(var dir of globdirs) {dirs.push(dir.split("/").pop().slice(0,10))}
+let data = dirs.filter(function(a){return dirs.indexOf(a) !== dirs.lastIndexOf(a)});
+if (data.length !== 0) {console.log(`Directories date are not unique ${data.join(", ")}`);process.exit()}
+ 
+ 
+//exif photos 
+var files=[]
+var FilePath    
+ 
+var globfiles = await glob(`${config.PhotosFolder}/????/????-??-??*/*.@(jpg|JPG|jpeg|JPEG)`)
+for ( FilePath of globfiles ) {
+    await size(FilePath)
+        await exif(FilePath)
+    if (EXITisValid) {process.exit()}
 }
  
+if (!Upload) {process.exit()}
  
-async function folders() {
-year = await readdir(`${config.PhotosFolder}`)
+//upload photos
+    globfiles = await glob(`${config.PhotosFolder}/????/????-??-??*/????????T??????.JPG`)
+for ( FilePath of globfiles ) {
+        await upload(FilePath)
+        if (EXITisValid) {process.exit()}
+}
  
-for(var y in year){
-   album = await readdir(`${config.PhotosFolder}/${year[y]}`)
- 
-   for(var a in album){
-     photo = await readdir(`${config.PhotosFolder}/${year[y]}/${album[a]}`)
-      
-     if (Exif) {
-         //Do unique folder date for unique photo name
-     var globfiles = await glob(`${config.PhotosFolder}/${year[y]}/????-??-??*`)
-     var files=[]
-     for(var file of globfiles) {files.push(file.split("/").pop().slice(0,10))}
-     let data = files.filter(function(a){return files.indexOf(a) !== files.lastIndexOf(a)});
-     //if (data.length !== 0) {console.log(`Directories date are not unique ${data.join(", ")}`);process.exit()}
-     }
- 
-     var ext
-     for(var p in photo){
-      ext = photo[p].split('.').pop().toLowerCase()
-      if  ((ext == 'jpg') || (ext == 'jpeg'))  {
-       console.log(`${photo[p]}......Ok`)
-       await size(photo[p],`${config.PhotosFolder}/${year[y]}/${album[a]}`) 
-       PhotoNewName = await exif(album[a],photo[p],`${config.PhotosFolder}/${year[y]}/${album[a]}`) 
-       if (Upload) {await upload(album[a],PhotoNewName,`${config.PhotosFolder}/${year[y]}/${album[a]}`)}
-        }
-      if (EXITisValid) {process.exit()}
-      }
-     }
-  }
 process.exit()
 }
  
  
-async function upload( AlbumName, FileName, Path ) {
+ 
+ 
+async function upload(FilePath) {
 await token()   
  
+const DirPath   = path.dirname (FilePath)
+const FileName  = path.basename(FilePath)
+const AlbumName = path.dirname (FilePath).split('/').pop()
+console.log (`FilePath  : ${FilePath}`)
+console.log (`FileName  : ${FileName}`) 
+console.log (`AlbumName : ${AlbumName}`) 
+console.log (`DirPath   : ${DirPath}`) 
+ 
+ 
 let photos = new Photos(tokens.access_token)
-let  meta = await exiftool.read(`${Path}/${FileName}`)
+let  meta = await exiftool.read(FilePath)
  
 AlbumID = ''
-if (await exists(`${Path}/id.txt`)) {AlbumID = await readFile(`${Path}/id.txt`)}
+if (await exists(`${DirPath}/id.txt`)) {AlbumID = await readFile(`${DirPath}/id.txt`)}
 console.log("------------------"+AlbumID+"-----------------")
  
  
@@ -223,13 +209,13 @@ if (AlbumID == '')
                 AlbumID = response.id
         console.log("New Album : "+AlbumNewName)
         console.log("AlbumId   : "+AlbumID)
-                await writeFile(`${Path}/id.txt`,AlbumID)
+                await writeFile(`${DirPath}/id.txt`,AlbumID)
                 }
  
     console.log('start upload')
     console.log("Try to Upload New Photo")
     let PhotoID
-        try{ response = await photos.mediaItems.upload(`${AlbumID}`, FileName, `${Path}/${FileName}`);
+        try{ response = await photos.mediaItems.upload(`${AlbumID}`, FileName, FilePath);
          if (response.newMediaItemResults[0].status.message !== 'Success') {console.log("ERREUR CREATION PICTURE");process.exit()}
          PhotoID=response.newMediaItemResults[0].mediaItem.id
     }
@@ -247,28 +233,37 @@ if (AlbumID == '')
     //let Epoch        = getUnixTime(GPSDateTime)*1000
     //await utimes(`${Path}/${FileName}`, Epoch, Epoch)
          
-    let Size = (await stats(`${Path}/${FileName}`)).size
+    let Size = (await stats(FilePath)).size
     console.log("Size:"+Size)
     TotalSize = TotalSize + (Size / 1000000000)
     console.log("TotalSize:"+TotalSize)
     console.log(`(${(12 - TotalSize).toFixed(1)} Go restants)`)
         if (TotalSize > 12) {bot.telegram.sendMessage(chatid,"Dans paramètres de Google Photos cliquez sur récupérer de l'espace de stockage\nRemarque : Vous ne pouvez récupérer de l'espace de stockage qu'une seule fois par jour.")}
  
-    await unlink(`${Path}/${FileName}`) //effacement du fichier
-        let FilesNumber = await readdir(`${Path}`)
+    await unlink(FilePath) //effacement du fichier
+        let FilesNumber = await readdir(DirPath)
          
         console.log("Nombre de fichiers restant pour supression du repertoire "+FilesNumber.length)
           if (FilesNumber.length == 1) {
-          await unlink(`${Path}/id.txt`)
-          await rmdir (`${Path}`)}
+          await unlink(`${DirPath}/id.txt`)
+          await rmdir (DirPath)}
             
 }
  
  
-async function exif( AlbumName, PhotoName, Path ) {
+async function exif(FilePath) {
+ 
+const DirPath   = path.dirname (FilePath)
+const FileName  = path.basename(FilePath)
+const AlbumName = path.dirname (FilePath).split('/').pop()
+console.log (`FilePath  : ${FilePath}`)
+console.log (`FileName  : ${FileName}`) 
+console.log (`AlbumName : ${AlbumName}`) 
+console.log (`DirPath   : ${DirPath}`) 
+ 
 const GenesisDateTime = new Date('1839-01-07T00:00:00').getTime()
  
-let meta = await exiftool.read(`${Path}/${PhotoName}`)
+let meta = await exiftool.read(FilePath)
  
 let AlbumDate           = new  Date(AlbumName.slice(0,10)+'T00:00:00').getTime()
 let AlbumDateLastMonth  = subMonths(AlbumDate, 1         ).getTime()
@@ -281,7 +276,7 @@ console.log("ImageUniqueID     : "+meta.ImageUniqueID)
 let GPSDateTime      = new Date(String(meta.GPSDateTime     ).slice(0,19)).getTime();
 let DateTimeOriginal = new Date(String(meta.DateTimeOriginal).slice(0,19)).getTime();
 let ImageUniqueID    = new Date(String(meta.ImageUniqueID   )            ).getTime();
-let PhotoNameString   = path.parse(PhotoName).name  
+let PhotoNameString   = path.parse(FileName).name   
 //let PhotoFormat   = `${Str.substring(0,4)}-${Str.substring(4,6)}-${Str.substring(6,8)}T${Str.substring(9,11)}:${Str.substring(11,13)}:${Str.substring(13,15)}`
 //let PhotoNameDate = new Date(String(PhotoFormat)).getTime()
  
@@ -292,9 +287,9 @@ if (isNaN(ImageUniqueID)   ) {ImageUniqueID    = GenesisDateTime}
  
 //console.log('\033[2J');
 console.log(`AlbumName         : ${AlbumName}`)
-console.log(`PhotoName         : ${PhotoName}`)
+console.log(`FileName          : ${FileName}`)
 console.log(`PhotoNameString   : ${PhotoNameString}`)
-console.log(`Path              : ${Path}`)
+console.log(`DirPath           : ${DirPath}`)
 console.log(`GenesisDateTime   : ${GenesisDateTime     } - ${format(GenesisDateTime,   "yyyy-MM-dd HH:mm:ss")}`)
 console.log(`AlbumDate         : ${AlbumDate           } - ${format(AlbumDate,         "yyyy-MM-dd HH:mm:ss")}`)
 console.log(`AlbumDateLastMonth: ${AlbumDateLastMonth  } - ${format(AlbumDateLastMonth,"yyyy-MM-dd HH:mm:ss")}`)
@@ -316,17 +311,17 @@ if (( DateTime < AlbumDateLastMonth   ) || ( DateTime > AlbumDateNextMonth      
 if (( GPSDateTime == DateTimeOriginal ) && ( GPSDateTime == ImageUniqueID         )) { EXIFisValid = true}
 if (  PhotoNameString == format(DateTime,"yyyyMMdd'T'HHmmss")                      ) { NAMEisValid = true}
  
-let FileName = PhotoName
+//let FileName = PhotoName
 let FileDate = DateTime
  
 if (! NAMEisValid) {
 let FileNewName = `${format(FileDate,"yyyyMMdd'T'HHmmss")}.JPG`
-    while (await exists(`${Path}/${FileNewName}`)) {
+    while (await exists(`${DirPath}/${FileNewName}`)) {
         FileDate    = addSeconds(FileDate , 1 )
         FileNewName = `${format(FileDate,"yyyyMMdd'T'HHmmss")}.JPG`
             console.log(`${FileNewName}`)
     }
-await rename(`${Path}/${FileName}`,`${Path}/${FileNewName}`)
+await rename(`${DirPath}/${FileName}`,`${DirPath}/${FileNewName}`)
 FileName = FileNewName
 DateTime = FileDate
 GPSisValid = false
@@ -346,33 +341,32 @@ console.log("EXIFisValid       : "+EXIFisValid)
 console.log("_______________________________________________________________________")
  
  
-      if (!GPSisValid) {await exiftool.write(`${Path}/${FileName}`, {AllDates: `${ExifDateTime}`, GPSDateStamp:`${ExifDate}`, GPSTimeStamp:`${ExifTime}`, ImageUniqueID: `${ExifDateTime}`})
+      if (!GPSisValid) {await exiftool.write(`${DirPath}/${FileName}`, {AllDates: `${ExifDateTime}`, GPSDateStamp:`${ExifDate}`, GPSTimeStamp:`${ExifTime}`, ImageUniqueID: `${ExifDateTime}`})
       console.log("GPS WRITE");
-      await unlink(`${Path}/${FileName}_original`)
+      await unlink(`${DirPath}/${FileName}_original`)
 }
-else if (!EXIFisValid) {await exiftool.write(`${Path}/${FileName}`, {AllDates:`${ExifDateTime}`, ImageUniqueID:`${ExifDateTime}`})
+else if (!EXIFisValid) {await exiftool.write(`${DirPath}/${FileName}`, {AllDates:`${ExifDateTime}`, ImageUniqueID:`${ExifDateTime}`})
     console.log("EXIF WRITE")
-    await unlink(`${Path}/${FileName}_original`)
+    await unlink(`${DirPath}/${FileName}_original`)
 }
  
-await utimes(`${Path}/${FileName}`, Epoch, Epoch)
+await utimes(`${DirPath}/${FileName}`, Epoch, Epoch)
 console.log("GPSDateTime Final Informations")
 console.log("------------------------------")
  
-meta = await exiftool.read(`${Path}/${FileName}`)
+meta = await exiftool.read(`${DirPath}/${FileName}`)
 console.log("GPSDateTime       : "+meta.GPSDateTime)
 console.log("DateTimeOriginal  : "+meta.DateTimeOriginal)
 console.log("ImageUniqueID     : "+meta.ImageUniqueID)
 if ((String(meta.GPSDateTime).slice(0,19)) !== (String(meta.DateTimeOriginal).slice(0,19))) {console.log('error GPSDateTime diff to DateTimeOriginal'); process.exit()}
  
-return `${FileName}`
 }
  
  
-async function size(FileName,Path) {
+async function size(File) {
  
 const maxSize = 100000000
-var dimensions = sizeOf(`${Path}/${FileName}`);
+var dimensions = sizeOf(`${File}`);
 console.log("Width : "+dimensions.width);
 console.log("Height: "+dimensions.height); 
 console.log("sizeOf: "+(dimensions.width*dimensions.height))
@@ -384,15 +378,15 @@ if ((dimensions.width * dimensions.height) > maxSize ) {
  
   let ratio = maxSize / (actualWidth * actualHeight)
   if (actualWidth > actualHeight) {newWidth  = Math.floor(Math.sqrt(ratio)*actualWidth) ;newHeight=undefined}
-                       else {newHeight = Math.floor(Math.sqrt(ratio)*actualHeight);newWidth =undefined}
+                         else {newHeight = Math.floor(Math.sqrt(ratio)*actualHeight);newWidth =undefined}
  
   console.log("NewWidth  : "+newWidth);
   console.log("NewHeight : "+newHeight);
   console.log("NewsizeOf : "+(newWidth*newHeight)) 
  
-  await sharp(`${Path}/${FileName}`).resize(newWidth, newHeight).jpeg({ quality: 95}).toFile(`${Path}/PhotoResizedBySharp.jpg`)
-  await unlink(`${Path}/${FileName}`)
-  await rename(`${Path}/PhotoResizedBySharp.jpg`, `${Path}/${FileName}`)
+  await sharp(`${File}`).resize(newWidth, newHeight).jpeg({ quality: 95}).toFile(`/tmp/PhotoResizedBySharp.jpg`)
+  await unlink(`${File}`)
+  await rename(`/tmp/PhotoResizedBySharp.jpg`, `${File}`)
   }
 }
  
