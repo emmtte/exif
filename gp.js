@@ -79,11 +79,17 @@ async function token() {
 var now = Date.now()
 console.log(`tokens.ExpiryDate  : ${tokens.expiry_date}`)
 console.log(`tokens.ExpiryDate  : ${format(tokens.expiry_date,"yyyy-MM-dd HH:mm:ss")}`)
-let ttime = tokens.expiry_date -120000
+let ttime = tokens.expiry_date -60000
 console.log(`ttime              : ${format(ttime,"yyyy-MM-dd HH:mm:ss")}`) 
 console.log(`now                : ${now}`) 
 console.log(`now                : ${format(now,"yyyy-MM-dd HH:mm:ss")}`)
-if (Date.now() > (tokens.expiry_date-120000)) {console.log("please ask for a new token")}
+ 
+if (Date.now() > (tokens.expiry_date-60000)) {
+  oAuth2Client.setCredentials({refresh_token:  tokens.refresh_token });
+  let response = await oAuth2Client.getAccessToken()
+  tokens = response.res.data
+  await writeFile("credentials.json", JSON.stringify(tokens, null, 1))  
+}
 }
  
  
@@ -147,7 +153,7 @@ if (Upload) {await auth()
  
 //check directories
 var dirs=[]
- 
+console.log(`Check Directories dates...`)
 var globdirs = await glob(`${config.PhotosFolder}/[1839-2300]/????-??-??*`)
 for(var dir of globdirs) {dirs.push(dir.split("/").pop().slice(0,10))}
 let data = dirs.filter(function(a){return dirs.indexOf(a) !== dirs.lastIndexOf(a)});
@@ -157,8 +163,8 @@ if (data.length !== 0) {console.log(`Directories date are not unique ${data.join
 //exif photos 
 var files=[]
 var FilePath    
- 
-var globfiles = await glob(`${config.PhotosFolder}/????/????-??-??*/*.@(jpg|JPG|jpeg|JPEG)`)
+console.log(`Check Photos Exif...`)
+var globfiles = await glob(`${config.PhotosFolder}/????/????-??-??*/*.@(heic|HEIC|jpg|JPG|jpeg|JPEG)`)
 for ( FilePath of globfiles ) {
     await size(FilePath)
         await exif(FilePath)
@@ -168,7 +174,8 @@ for ( FilePath of globfiles ) {
 if (!Upload) {process.exit()}
  
 //upload photos
-    globfiles = await glob(`${config.PhotosFolder}/????/????-??-??*/????????T??????.JPG`)
+console.log(`Upload Photos to Goole Photos...`)
+    globfiles = await glob(`${config.PhotosFolder}/????/????-??-??*/????????T??????.@(HEIC|JPEG)`)
 for ( FilePath of globfiles ) {
         await upload(FilePath)
         if (EXITisValid) {process.exit()}
@@ -254,12 +261,16 @@ if (AlbumID == '')
 async function exif(FilePath) {
  
 const DirPath   = path.dirname (FilePath)
-const FileName  = path.basename(FilePath)
+var FileName  = path.basename(FilePath)
 const AlbumName = path.dirname (FilePath).split('/').pop()
+var ExtName =  FilePath.split('.').pop().toUpperCase()
+if (ExtName == 'JPG') {ExtName = 'JPEG'}
+ 
 console.log (`FilePath  : ${FilePath}`)
 console.log (`FileName  : ${FileName}`) 
 console.log (`AlbumName : ${AlbumName}`) 
 console.log (`DirPath   : ${DirPath}`) 
+console.log (`ExtName   : ${ExtName}`)
  
 const GenesisDateTime = new Date('1839-01-07T00:00:00').getTime()
  
@@ -315,10 +326,10 @@ if (  PhotoNameString == format(DateTime,"yyyyMMdd'T'HHmmss")                   
 let FileDate = DateTime
  
 if (! NAMEisValid) {
-let FileNewName = `${format(FileDate,"yyyyMMdd'T'HHmmss")}.JPG`
+let FileNewName = `${format(FileDate,"yyyyMMdd'T'HHmmss")}.${ExtName}`
     while (await exists(`${DirPath}/${FileNewName}`)) {
         FileDate    = addSeconds(FileDate , 1 )
-        FileNewName = `${format(FileDate,"yyyyMMdd'T'HHmmss")}.JPG`
+        FileNewName = `${format(FileDate,"yyyyMMdd'T'HHmmss")}.${ExtName}`
             console.log(`${FileNewName}`)
     }
 await rename(`${DirPath}/${FileName}`,`${DirPath}/${FileNewName}`)
@@ -341,11 +352,11 @@ console.log("EXIFisValid       : "+EXIFisValid)
 console.log("_______________________________________________________________________")
  
  
-      if (!GPSisValid) {await exiftool.write(`${DirPath}/${FileName}`, {AllDates: `${ExifDateTime}`, GPSDateStamp:`${ExifDate}`, GPSTimeStamp:`${ExifTime}`, ImageUniqueID: `${ExifDateTime}`})
+      if (!GPSisValid) {await exiftool.write(`${DirPath}/${FileName}`, {AllDates: `${ExifDateTime}`, GPSDateStamp:`${ExifDate}`, GPSTimeStamp:`${ExifTime}`, ImageUniqueID: `${ExifDateTime}`, ImageDescription: ''})
       console.log("GPS WRITE");
       await unlink(`${DirPath}/${FileName}_original`)
 }
-else if (!EXIFisValid) {await exiftool.write(`${DirPath}/${FileName}`, {AllDates:`${ExifDateTime}`, ImageUniqueID:`${ExifDateTime}`})
+else if (!EXIFisValid) {await exiftool.write(`${DirPath}/${FileName}`, {AllDates:`${ExifDateTime}`, ImageUniqueID:`${ExifDateTime}`, ImageDescription: ''})
     console.log("EXIF WRITE")
     await unlink(`${DirPath}/${FileName}_original`)
 }
@@ -364,6 +375,9 @@ if ((String(meta.GPSDateTime).slice(0,19)) !== (String(meta.DateTimeOriginal).sl
  
  
 async function size(File) {
+var ExtName =  File.split('.').pop().toUpperCase()
+if (EXTName = 'HEIC') {return;}
+ 
  
 const maxSize = 100000000
 var dimensions = sizeOf(`${File}`);
