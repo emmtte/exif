@@ -2,7 +2,7 @@
 Automatically fix photo's metadata and upload into Google Photos
 ## Features
 * Supported photo formats : JPEG and HEIC
-* Automatically fix EXIF DateTimeGPS with DateTimeOriginal if exists or else with directory name
+* Automatically delte extra EXIF and fix DateTimeOriginal with directory name if needed
 * Rename photo files with an unique name ````yyyy-MM-ddThh:mm:ss.(JPEG or HEIC)````
 * Create Google Photos Albums with the directory's name ````yyyy-MM-dd *````
 * Upload photos into the appropriate Album
@@ -54,7 +54,7 @@ Please be carreful : use this script with a backup for your photos
 
 Run one of this two command from the location of the packages install directory
 * To correct EXIF Photos : ````node gp````
-* To correct EXIF Photos and Upload : ````node gp upload````
+* To Upload : ````node gp upload````
 
 ## MIT License
 
