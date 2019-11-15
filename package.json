@@ -1,7 +1,7 @@
 {
-  "name": "google-photos-storage",
-  "version": "0.0.1",
-  "description": "2IN1 tools",
+  "name": "google-photos-metadata-fixer",
+  "version": "1",
+  "description": "Automatically fix photo's metadata and upload into Google Photos",
   "private": true,
   "main": "gp.js",
   "dependencies": {
@@ -10,15 +10,12 @@
     "exiftool-vendored": "latest",
     "image-size": "latest",
     "sharp": "latest",
-    "dropbox": "latest",
     "fs": "latest",
     "glob": "latest",
     "googleapis": "latest",
     "googlephotos": "latest",
-    "node-schedule": "latest",
     "path": "latest",
     "prompts": "latest",
-    "request-promise": "latest",
     "sharp": "latest",
     "telegraf": "latest",
     "util": "latest"
