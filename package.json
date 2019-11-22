@@ -8,8 +8,6 @@
     "date-fns": "latest",
     "dealy": "latest",
     "exiftool-vendored": "latest",
-    "image-size": "latest",
-    "sharp": "latest",
     "fs": "latest",
     "glob": "latest",
     "googleapis": "latest",
