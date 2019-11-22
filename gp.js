@@ -14,7 +14,7 @@ const fs        = require('fs')
 const path      = require('path')
 const util      = require('util')
  
-const glob = util.promisify(require('glob'));
+const glob      = util.promisify(require('glob'));
  
 const readFile  = util.promisify(fs.readFile )
 const writeFile = util.promisify(fs.writeFile)
@@ -34,8 +34,7 @@ const addSeconds   = require('date-fns/addSeconds')
 const isValid      = require('date-fns/isValid')
  
 const sharp     = require('sharp')
-const sizeOf    = require('image-size')
- 
+//const sizeOf    = util.promisify(require('image-size'));
 const exiftool  = require('exiftool-vendored').exiftool
  
 const Telegraf = require('telegraf')
@@ -120,7 +119,7 @@ if (Upload) {
         console.log(`Upload Photos to Goole Photos...`)
         globfiles = await glob(`${config.PhotosFolder}/????/????-??-??*/????????T??????.@(HEIC|JPEG)`)
         for ( FilePath of globfiles ) {await upload(FilePath)}
-    Process.exit()
+    process.exit()
 }
  
 //rename files
@@ -141,11 +140,13 @@ for ( FilePath of globfiles ) {
 console.log(`Check Photos Exif...`)
     globfiles = await glob(`${config.PhotosFolder}/????/????-??-??*/*.@(heic|HEIC|jpg|JPG|jpeg|JPEG)`)
 for ( FilePath of globfiles ) {
+    console.log("###############################")
+    console.log(FilePath)
     await size(FilePath)
         await exif(FilePath)
 }
  
-Process.exit()
+process.exit()
 }
  
  
@@ -184,14 +185,14 @@ if (AlbumID == '')
     console.log('start upload')
     console.log("Try to Upload New Photo")
         try{ let response = await photos.mediaItems.upload(`${AlbumID}`, FileName, FilePath)
-           if (response.newMediaItemResults[0].status.message !== 'Success') {console.log("ERREUR CREATION PICTURE");Process.exit()}
+           if (response.newMediaItemResults[0].status.message !== 'Success') {console.log("ERREUR CREATION PICTURE");process.exit()}
     }
     catch(e) {//console.log (e)
         console.log(e.error.error.message)
         console.log(e.error.error.status)
         bot.telegram.sendMessage(chatid,"Error Upload : "+e.error.error.message)
-        if (e.error.error.code == 500) {Process.exit()}
-        Process.exit()
+        if (e.error.error.code == 500) {process.exit()}
+        process.exit()
     }
          
     let Size = (await stats(FilePath)).size
@@ -227,6 +228,7 @@ let AlbumDateLastMonth  = subMonths(AlbumDate, 1         ).getTime()
 let AlbumDateNextMonth  = addMonths(AlbumDate, 1         ).getTime()
  
 console.clear();
+//console.log ('meta'+JSON.stringify(meta, null, 4))
 console.log (`FilePath          : ${FilePath}`)
 console.log (`FileName          : ${FileName}`) 
 console.log (`AlbumName         : ${AlbumName}`) 
@@ -237,6 +239,7 @@ console.log (`AlbumDate         : ${AlbumDate}`)
 console.log (`AlbumDateLastMonth: ${AlbumDateLastMonth}`)
 console.log (`AlbumDateNextMonth: ${AlbumDateNextMonth}`)
 console.log (`DateTimeOriginal  : ${meta.DateTimeOriginal}`)
+console.log (`GPSDateTime       : ${meta.GPSDateTime}`)
 console.log ()
 console.log (`Orientation       : ${meta.Orientation    }`)
 console.log (`FNumber           : ${meta.FNumber}`)
@@ -251,9 +254,9 @@ console.log (`GPSLatitudeRef    : ${meta.GPSLatitudeRef}`)
 console.log (`GPSLongitudeRef   : ${meta.GPSLongitudeRef}`)
  
 let DateTime = new Date(String(meta.DateTimeOriginal).slice(0,19)).getTime();
-if ( ! isValid(AlbumDate)) { console.log("Error Album date not valid"  );Process.exit()}
+if ( ! isValid(AlbumDate)) { console.log("Error Album date not valid"  );process.exit()}
 if ( ! isValid(DateTime )) { DateTime = AlbumDate}
-if (meta.FNumber  == undefined) {DateTime=AlbumDate}
+if ((meta.ISO  == undefined) && (meta.FNumber == undefined)) {DateTime=AlbumDate}
 if (( DateTime < AlbumDateLastMonth ) || ( DateTime > AlbumDateNextMonth )) { DateTime = AlbumDate ;console.log("ERROR not inside right album")}
  
  
@@ -272,7 +275,7 @@ console.log (`ExifDateTime      : ${ExifDateTime}`)
  
  
 try { await exiftool.write(`${DirPath}/${FileName}`, {}, ["-all="])} catch(e) {console.log('ERROR DELETE EXIF')}
-await exiftool.write(`${DirPath}/${FileName}`, {AllDates: `${ExifDateTime}`, Model:'Camera Exposure', FNumber: meta.FNumber, ExposureTime: meta.ExposureTime, FocalLength:meta.FocalLength, ISO: meta.ISO,GPSAltitude:meta.GPSAltitude,GPSLatitude:meta.GPSLatitude,GPSLongitude:meta.GPSLongitude,GPSLatitudeRef:meta.GPSLatitudeRef,GPSLongitudeRef:meta.GPSLongitudeRef})
+await exiftool.write(`${DirPath}/${FileName}`, {AllDates: `${ExifDateTime}`, Model:'Camera', FNumber: meta.FNumber, ExposureTime: meta.ExposureTime, FocalLength:meta.FocalLength, ISO: meta.ISO,ShutterSpeedValue: meta.ShutterSpeedValue,ApertureValue:meta.ApertureValue,Flash:meta.Flash,GPSAltitude:meta.GPSAltitude,GPSLatitude:meta.GPSLatitude,GPSLongitude:meta.GPSLongitude,GPSLatitudeRef:meta.GPSLatitudeRef,GPSLongitudeRef:meta.GPSLongitudeRef})
 if (meta.Orientation==undefined) (meta.Orientation = 1)
 await exiftool.write(`${DirPath}/${FileName}`, {Orientation: `${meta.Orientation}`}, ['-n'])
  
@@ -289,12 +292,18 @@ await utimes(`${DirPath}/${FileName}`, Epoch, Epoch)
  
  
 async function size(File) {
+ 
+const DirPath = path.dirname (File)
+var FileName  = path.basename(File)
 var ExtName =  File.split('.').pop().toUpperCase()
-if (ExtName == 'HEIC') {return}
+//if (ExtName == 'HEIC') {return}
  
  
 const maxSize = 100000000
-var dimensions = sizeOf(`${File}`);
+ 
+var dimensions = await sharp(`${File}`).metadata()
+ 
+//console.log(dimensions)
 console.log("Width : "+dimensions.width);
 console.log("Height: "+dimensions.height); 
 console.log("sizeOf: "+(dimensions.width*dimensions.height))
@@ -313,8 +322,8 @@ if ((dimensions.width * dimensions.height) > maxSize ) {
   console.log("NewHeight : "+newHeight);
   console.log("NewsizeOf : "+(newWidth*newHeight)) 
  
-  await sharp(`${File}`).resize(newWidth, newHeight).jpeg({ quality: 95}).toFile(`/tmp/PhotoResizedBySharp.jpg`)
+  await sharp(`${File}`).resize(newWidth, newHeight).jpeg({ quality: 95}).toFile(`${DirPath}/PhotoResizedBySharp.jpg`)
   await unlink(`${File}`)
-  await rename(`/tmp/PhotoResizedBySharp.jpg`, `${File}`)
+  await rename(`${DirPath}/PhotoResizedBySharp.jpg`, `${File}`)
   }
 }
