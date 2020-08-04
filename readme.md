@@ -46,7 +46,7 @@ Creating a new bot with [BotFather](https://telegram.me/botfather)
 #### Downloading and installing packages locally
 ````
 mkdir ~/gp && cd ~/gp
-wget https://raw.githubusercontent.com/ManuCart/Google-Photos-Metadata-Fixer/master/package.json
+wget https://raw.githubusercontent.com/emmtte/Google-Photos-Metadata-Fixer/master/package.json
 npm install
 ````
 #### Execution
