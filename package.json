@@ -6,7 +6,6 @@
   "main": "gp.js",
   "dependencies": {
     "date-fns": "latest",
-    "dealy": "latest",
     "exiftool-vendored": "latest",
     "fs": "latest",
     "glob": "latest",
