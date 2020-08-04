@@ -48,6 +48,7 @@ Creating a new bot with [BotFather](https://telegram.me/botfather)
 mkdir ~/gp && cd ~/gp
 wget https://raw.githubusercontent.com/emmtte/Google-Photos-Metadata-Fixer/master/package.json
 npm install
+wget https://raw.githubusercontent.com/emmtte/Google-Photos-Metadata-Fixer/master/gp.js
 ````
 #### Execution
 Please be carreful : use this script with a backup for your photos
