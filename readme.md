@@ -2,7 +2,7 @@
 Automatically fix photo's metadata EXIF and upload into Google Photos
 ## Features
 * Supported photo formats : JPEG and HEIC
-* Automatically delte extra EXIF and fix DateTimeOriginal with directory name if needed
+* Automatically delete extra EXIF and fix DateTimeOriginal with directory name if needed
 * Rename photo files with an unique name ````yyyy-MM-ddThh:mm:ss.(JPEG or HEIC)````
 * Create Google Photos Albums with the directory's name ````yyyy-MM-dd *````
 * Upload photos into the appropriate Album
