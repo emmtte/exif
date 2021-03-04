@@ -59,7 +59,7 @@ Run one of this two command from the location of the packages install directory
 
 ## MIT License
 
-Copyright © ````October 1, 2019```` ````Emmanuel CHARETTE````
+Copyright © ````October 1, 2019```` ````emmtte````
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
