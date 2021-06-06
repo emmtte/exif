@@ -14,7 +14,8 @@ Automatically fix photo's metadata EXIF and upload into Google Photos
 Go to [nodejs.org](https://nodejs.org/en/download/current/) to download and install latest current version
 ````
 VERSION=13.0.1
-sudo apt-get -y install build-essential
+sudo apt -y install build-essential
+sudo apt -y install libvips #for sharp
 wget https://nodejs.org/dist/v$VERSION/node-v$VERSION-linux-armv7l.tar.gz -O node.tar.gz
 sudo tar -xvf node.tar.gz --strip 1 -C /usr/local
 rm node.tar.gz
