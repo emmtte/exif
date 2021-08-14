@@ -1,4 +1,4 @@
-# Google Photos Metadata Fixer
+# Photos Metadata Fixer
 Automatically fix photo's metadata EXIF and upload into Google Photos
 ## Features
 * Supported photo formats : JPEG and HEIC
